@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- GLOBAL SAFETY NET ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- PRIMITIVE DEFINITIONS ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- VALIDATION BLUEPRINTS ---
+    function isValidHomeContent(data) {
+      return data.keys().hasAll(['hero', 'dualCards', 'ownerSpotlight'])
+        && data.keys().size() >= 3;
+    }
+
+    function isValidDrivingContent(data) {
+      return data.keys().hasAll(['pricingPlans', 'instructors', 'testimonials', 'cta'])
+        && data.keys().size() >= 4;
+    }
+
+    function isValidRealEstateContent(data) {
+      return data.keys().hasAll(['properties', 'mortgageSettings', 'cta'])
+        && data.keys().size() >= 3;
+    }
+
+    function isValidAdminLog(data) {
+      return data.keys().hasAll(['action', 'adminEmail', 'timestamp'])
+        && data.keys().size() == 3
+        && data.action is string && data.action.size() <= 500
+        && data.adminEmail is string && data.adminEmail.size() <= 200
+        && data.timestamp == request.time;
+    }
+
+    // --- COLLECTION RULES ---
+
+    // 1. Homepage Content Settings
+    match /homeContent/{docId} {
+      allow read: if true; // Public visitors must load configuration to show on the landing page
+      allow create, update: if isSignedIn() 
+        && isValidId(docId) 
+        && isValidHomeContent(incoming())
+        && (request.resource.data.updatedAt == request.time || !request.resource.data.keys().hasAny(['updatedAt']));
+      allow delete: if isSignedIn();
+    }
+
+    // 2. Driving Academy Curriculum & Coaches
+    match /drivingContent/{docId} {
+      allow read: if true; // Public visitors can check classes and schedules
+      allow create, update: if isSignedIn() 
+        && isValidId(docId) 
+        && isValidDrivingContent(incoming())
+        && (request.resource.data.updatedAt == request.time || !request.resource.data.keys().hasAny(['updatedAt']));
+      allow delete: if isSignedIn();
+    }
+
+    // 3. Real Estate Portfolios & Listings
+    match /realEstateContent/{docId} {
+      allow read: if true; // Public visitors can search properties & use mortgage calculators
+      allow create, update: if isSignedIn() 
+        && isValidId(docId) 
+        && isValidRealEstateContent(incoming())
+        && (request.resource.data.updatedAt == request.time || !request.resource.data.keys().hasAny(['updatedAt']));
+      allow delete: if isSignedIn();
+    }
+
+    // 4. Audit Security Logging Trails
+    match /adminLogs/{logId} {
+      allow read, write: if isSignedIn() && isValidId(logId);
+      allow create: if isSignedIn() 
+        && isValidId(logId) 
+        && isValidAdminLog(incoming());
+      allow update, delete: if isSignedIn();
+    }
+  }
+}

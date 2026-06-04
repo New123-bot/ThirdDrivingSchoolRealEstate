@@ -1,0 +1,6 @@
+{
+  "name": "DualDrive & Estate",
+  "description": "Premium Motor Driving School and Real Estate coaching by Michael Reynolds. Drive First. Own Next. One Coach.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

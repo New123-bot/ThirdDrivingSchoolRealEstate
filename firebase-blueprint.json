@@ -1,0 +1,123 @@
+{
+  "entities": {
+    "HomeContent": {
+      "title": "HomeContent",
+      "description": "Configuration content for the landing/homepage",
+      "type": "object",
+      "properties": {
+        "hero": {
+          "type": "object",
+          "description": "Hero section configurations including images and headline copy"
+        },
+        "dualCards": {
+          "type": "object",
+          "description": "Pre-configured dual business cards layout parameters"
+        },
+        "ownerSpotlight": {
+          "type": "object",
+          "description": "Spotlight section with portrait headshot and bio quote"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when this homepage configuration was last saved"
+        }
+      },
+      "required": ["hero", "dualCards", "ownerSpotlight"]
+    },
+    "DrivingContent": {
+      "title": "DrivingContent",
+      "description": "Configuration content for the Driving Academy page",
+      "type": "object",
+      "properties": {
+        "pricingPlans": {
+          "type": "array",
+          "description": "Array of pricing packages and features"
+        },
+        "instructors": {
+          "type": "array",
+          "description": "Database of modern driving safety coaches"
+        },
+        "testimonials": {
+          "type": "array",
+          "description": "Active student reviews and rating stars"
+        },
+        "cta": {
+          "type": "object",
+          "description": "Call-to-action button properties"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last edit save"
+        }
+      },
+      "required": ["pricingPlans", "instructors", "testimonials", "cta"]
+    },
+    "RealEstateContent": {
+      "title": "RealEstateContent",
+      "description": "Configuration content for the Real Estate listings and settings",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "type": "array",
+          "description": "MLS listing database for active properties"
+        },
+        "mortgageSettings": {
+          "type": "object",
+          "description": "Settings for interest rate and loan terms used in standard calculations"
+        },
+        "cta": {
+          "type": "object",
+          "description": "Call-to-action details"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last edit save"
+        }
+      },
+      "required": ["properties", "mortgageSettings", "cta"]
+    },
+    "AdminLog": {
+      "title": "AdminLog",
+      "description": "Historical audit recording representing admin operations",
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Brief description of the action taken"
+        },
+        "adminEmail": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the authenticated principal broker performing the edit"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server-side logged timestamp when this entry was added"
+        }
+      },
+      "required": ["action", "adminEmail", "timestamp"]
+    }
+  },
+  "firestore": {
+    "homeContent/{docId}": {
+      "schema": "HomeContent",
+      "description": "Single-document collection holding key homepage layout configs"
+    },
+    "drivingContent/{docId}": {
+      "schema": "DrivingContent",
+      "description": "Single-document collection holding Driving School details"
+    },
+    "realEstateContent/{docId}": {
+      "schema": "RealEstateContent",
+      "description": "Single-document collection holding available property listings"
+    },
+    "adminLogs/{logId}": {
+      "schema": "AdminLog",
+      "description": "History of administrator dashboard updates"
+    }
+  }
+}
