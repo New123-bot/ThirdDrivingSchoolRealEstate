@@ -70,13 +70,13 @@ export default function Navbar() {
               </NavLink>
             ))}
 
-            <a
-              href="/admin/index.html"
-              className="ml-4 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase border border-zinc-700 hover:border-orangeAccent text-zinc-400 hover:text-white hover:bg-zinc-800/30 transition-all duration-300 flex items-center gap-1.5"
+            <Link
+              to="/admin/login"
+              className="ml-4 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase border border-zinc-700 hover:border-[#ff6b35] text-zinc-400 hover:text-white hover:bg-zinc-800/30 transition-all duration-300 flex items-center gap-1.5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               Admin
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Hamburguer button */}
@@ -127,14 +127,14 @@ export default function Navbar() {
               </NavLink>
             ))}
 
-            <a
-              href="/admin/index.html"
+            <Link
+              to="/admin/login"
               onClick={closeMenu}
               className="block px-4 py-3 rounded-lg text-base font-bold tracking-wide text-zinc-400 hover:text-white hover:bg-zinc-800/40 border-t border-zinc-800 mt-2 flex items-center gap-2"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span>🔒 Administrative Access</span>
-            </a>
+            </Link>
           </div>
         </div>
       )}
